@@ -1,14 +1,13 @@
 package geometry;
 
+import geometry.mesh.Mesh;
+
 import java.util.Vector;
 
 import javax.media.opengl.GL2;
 
-import octree.collisions.CollisionDetails;
-
 import material.Colour;
-
-import geometry.mesh.Mesh;
+import collisions.Collision;
 
 public class Box extends Mesh {
   
@@ -82,8 +81,8 @@ public class Box extends Mesh {
   }
 
   @Override
-  public Vector<CollisionDetails> collide(Box space, double accuracy) {
-    Vector<CollisionDetails> collisions = new Vector<CollisionDetails>();
+  public Vector<Collision> collide(Box space, double accuracy) {
+    Vector<Collision> collisions = new Vector<Collision>();
     int vertsInside = 0;
     
     for(Vertex vert : vertices) {
@@ -93,9 +92,9 @@ public class Box extends Mesh {
     }
     
     if(vertsInside == vertices.length) {
-      collisions.add(new CollisionDetails(this, CollisionDetails.COLLISION_FULL));
+      collisions.add(new Collision(this, Collision.COLLISION_FULL));
     } else if(vertsInside > 0) {
-      collisions.add(new CollisionDetails(this, CollisionDetails.COLLISION_PARTIAL));
+      collisions.add(new Collision(this, Collision.COLLISION_PARTIAL));
     }
     
     return collisions;

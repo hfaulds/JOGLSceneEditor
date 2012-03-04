@@ -7,8 +7,8 @@ import java.util.Arrays;
 import java.util.Vector;
 
 import octree.OctTree;
-import octree.collisions.CollisionDetails;
 import octree.nodes.LeafTarget;
+import collisions.Collision;
 
 public abstract class OctreeFactory<NodeType extends LeafTarget> {
 
@@ -34,9 +34,9 @@ public abstract class OctreeFactory<NodeType extends LeafTarget> {
     Vector<NodeType> elements = new Vector<NodeType>();
     
     for (NodeType element : parentElements) {
-      for (CollisionDetails collision : element.collide(space, 0.1)) {
+      for (Collision collision : element.getCollisionHandler().collide(space, 0.1)) {
         if (collision.source instanceof LeafTarget && 
-            collision.type == CollisionDetails.COLLISION_FULL) {
+            collision.type == Collision.COLLISION_FULL) {
           elements.add((NodeType) collision.source);
         }
       }

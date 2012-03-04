@@ -1,20 +1,22 @@
 package octree;
 
+import editors.static_settings.DebugSettings;
 import geometry.Box;
+import geometry.Frustrum;
 import geometry.Line;
 
 import java.util.Vector;
 
 import javax.media.opengl.GL2;
 
-import octree.collisions.Collidable;
-import octree.collisions.CollisionDetails;
-import octree.collisions.CollisionFrustrum;
 import octree.nodes.LeafTarget;
 import octree.nodes.Placeable;
 import renderers.core.GLRenderable;
+import collisions.Collidable;
+import collisions.Collision;
+import collisions.CollisionHandler;
 
-public class OctTree implements Collidable, GLRenderable {
+public class OctTree implements Collidable, CollisionHandler, GLRenderable {
 
   public static final int MAX_ELEMENTS = 1;
 
@@ -38,14 +40,14 @@ public class OctTree implements Collidable, GLRenderable {
   }
 
   @Override
-  public Vector<CollisionDetails> collide(Line line, double accuracy) {
-    Vector<CollisionDetails> collisions = new Vector<CollisionDetails>();
+  public Vector<Collision> collide(Line line, double accuracy) {
+    Vector<Collision> collisions = new Vector<Collision>();
 
     if (line.collide(space, accuracy)) {
-      collisions.add(new CollisionDetails(this, CollisionDetails.COLLISION_FULL));
+      collisions.add(new Collision(this, Collision.COLLISION_FULL));
 
       for (LeafTarget element : elements) {
-        collisions.addAll(element.collide(line, accuracy));
+        collisions.addAll(element.getCollisionHandler().collide(line, accuracy));
       }
 
       for (OctTree subTree : subTrees) {
@@ -57,15 +59,15 @@ public class OctTree implements Collidable, GLRenderable {
   }
 
   @Override
-  public Vector<CollisionDetails> collide(CollisionFrustrum frustrum,
+  public Vector<Collision> collide(Frustrum frustrum,
       double accuracy) {
-    Vector<CollisionDetails> collisions = new Vector<CollisionDetails>();
+    Vector<Collision> collisions = new Vector<Collision>();
 
     if (frustrum.collide(space, accuracy)) {
-      collisions.add(new CollisionDetails(this, CollisionDetails.COLLISION_FULL));
+      collisions.add(new Collision(this, Collision.COLLISION_FULL));
       
       for (LeafTarget element : elements) {
-        collisions.addAll(element.collide(frustrum, accuracy));
+        collisions.addAll(element.getCollisionHandler().collide(frustrum, accuracy));
       }
 
       for (OctTree subTree : subTrees) {
@@ -77,13 +79,13 @@ public class OctTree implements Collidable, GLRenderable {
   }
 
   @Override
-  public Vector<CollisionDetails> collide(Placeable box, double accuracy) {
+  public Vector<Collision> collide(Placeable box, double accuracy) {
     // TODO Auto-generated method stub
     throw new RuntimeException("TODO");
   }
 
   @Override
-  public Vector<CollisionDetails> collide(Box space, double accuracy) {
+  public Vector<Collision> collide(Box space, double accuracy) {
     // TODO Auto-generated method stub
     throw new RuntimeException("TODO");
   }
@@ -103,7 +105,8 @@ public class OctTree implements Collidable, GLRenderable {
 
   @Override
   public void render(GL2 gl) {
-    space.render(gl);
+    if(DebugSettings.B_RENDER_OCTREE)
+      space.render(gl);
 
     for (LeafTarget element : elements)
       element.render(gl);
@@ -127,5 +130,10 @@ public class OctTree implements Collidable, GLRenderable {
     } else {
       return false;
     }
+  }
+
+  @Override
+  public CollisionHandler getCollisionHandler() {
+    return this;
   }
 }

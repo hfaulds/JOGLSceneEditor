@@ -1,6 +1,7 @@
 package renderers;
 
 import editors.input.MouseKeyboardInputListener;
+import geometry.Frustrum;
 import geometry.Line;
 import geometry.Vertex;
 
@@ -12,14 +13,13 @@ import javax.media.opengl.GLAutoDrawable;
 
 import material.Colour;
 import octree.OctTree;
-import octree.collisions.CollisionDetails;
-import octree.collisions.CollisionFrustrum;
 import octree.factories.VertexOctreeFactory;
 import octree.nodes.StaticMesh;
 import renderers.core.Renderer2D;
 import renderers.core.Renderer3D;
 import renderers.core.ViewFrustrumRenderer;
 import renderers.core.ViewPortRenderer;
+import collisions.Collision;
 
 public class StaticMeshRenderer extends Renderer3D {
 
@@ -80,11 +80,11 @@ public class StaticMeshRenderer extends Renderer3D {
     Line line3 = unProject(gl, bottomx, bottomy);
     Line line4 = unProject(gl, bottomx, topy);
     
-    CollisionFrustrum collisionFrustrum = new CollisionFrustrum(line1, line2,line3, line4);
+    Frustrum collisionFrustrum = new Frustrum(line1, line2,line3, line4);
     
-    Vector<CollisionDetails> collisions = meshVertTree.collide(collisionFrustrum, 0);
+    Vector<Collision> collisions = meshVertTree.collide(collisionFrustrum, 0);
     
-    for (CollisionDetails collision : collisions) {
+    for (Collision collision : collisions) {
       if(collision.source instanceof Vertex) {
         selectVert((Vertex)collision.source);
       }
@@ -96,12 +96,12 @@ public class StaticMeshRenderer extends Renderer3D {
   
   private void selectSingleVertex(GL2 gl, Point mousePos) {
     Line collisionline = unProject(gl, mousePos);
-    Vector<CollisionDetails> collisions = meshVertTree.collide(collisionline, 0.5);
+    Vector<Collision> collisions = meshVertTree.collide(collisionline, 0.5);
     
     Vertex closestVertex = null;
     int currentDistance = 9999;
     
-    for(CollisionDetails collision : collisions) {
+    for(Collision collision : collisions) {
       if(collision.source instanceof Vertex) {
         Vertex vertex = (Vertex) collision.source;
         double distance = vertex.distanceTo(camera.getEyePosition());

@@ -1,6 +1,7 @@
 package geometry.mesh;
 
 import geometry.Box;
+import geometry.Frustrum;
 import geometry.Line;
 import geometry.Triangle;
 import geometry.Vertex;
@@ -9,12 +10,12 @@ import java.util.Vector;
 
 import javax.media.opengl.GL2;
 
-import octree.collisions.Collidable;
-import octree.collisions.CollisionDetails;
-import octree.collisions.CollisionFrustrum;
 import octree.nodes.Placeable;
+import collisions.Collidable;
+import collisions.Collision;
+import collisions.CollisionHandler;
 
-public class Mesh implements Collidable {
+public class Mesh implements Collidable, CollisionHandler {
   public final String name;
   
   public final Vertex[] vertices;
@@ -99,29 +100,29 @@ public class Mesh implements Collidable {
 
 
   @Override
-  public Vector<CollisionDetails> collide(Line line, double accuracy) {
-    Vector<CollisionDetails> collisions = new Vector<CollisionDetails>();
+  public Vector<Collision> collide(Line line, double accuracy) {
+    Vector<Collision> collisions = new Vector<Collision>();
 
     for (Vertex vertex : vertices) {
       collisions.addAll(vertex.collide(line, accuracy));
     }
     
     if(collisions.size() > 0) {
-      collisions.add(new CollisionDetails(this,CollisionDetails.COLLISION_FULL));
+      collisions.add(new Collision(this,Collision.COLLISION_FULL));
     }
     
     return collisions;
   }
 
   @Override
-  public Vector<CollisionDetails> collide(CollisionFrustrum box, double accuracy) {
-    Vector<CollisionDetails> collisions = new Vector<CollisionDetails>();
+  public Vector<Collision> collide(Frustrum box, double accuracy) {
+    Vector<Collision> collisions = new Vector<Collision>();
 
     boolean partial = false;
     boolean collides = false;
     
     for (Vertex vertex : vertices) {
-        Vector<CollisionDetails> vertexCollisions = vertex.collide(box, accuracy);
+        Vector<Collision> vertexCollisions = vertex.collide(box, accuracy);
         
         collisions.addAll(vertexCollisions);
         
@@ -135,9 +136,9 @@ public class Mesh implements Collidable {
 
     if(collides) {
       if(partial) {
-        collisions.add(new CollisionDetails(this, CollisionDetails.COLLISION_PARTIAL));
+        collisions.add(new Collision(this, Collision.COLLISION_PARTIAL));
       } else {
-        collisions.add(new CollisionDetails(this, CollisionDetails.COLLISION_FULL));
+        collisions.add(new Collision(this, Collision.COLLISION_FULL));
       }
     }
 
@@ -145,7 +146,7 @@ public class Mesh implements Collidable {
   }
 
   @Override
-  public Vector<CollisionDetails> collide(Placeable box, double accuracy) {
+  public Vector<Collision> collide(Placeable box, double accuracy) {
     // TODO Auto-generated method stub
     throw new RuntimeException("TODO");
   }
@@ -163,7 +164,12 @@ public class Mesh implements Collidable {
   }
 
   @Override
-  public Vector<CollisionDetails> collide(Box space, double accuracy) {
+  public Vector<Collision> collide(Box space, double accuracy) {
     return null;
+  }
+
+  @Override
+  public CollisionHandler getCollisionHandler() {
+    return this;
   }
 }

@@ -1,15 +1,11 @@
-package octree.collisions;
+package geometry;
 
-import geometry.Box;
-import geometry.Line;
-import geometry.Plane;
-import geometry.Vertex;
 
-public class CollisionFrustrum {
+public class Frustrum {
   
   public final Plane[] planes = new Plane[4];
   
-  public CollisionFrustrum(Line line0, Line line1, Line line2, Line line3)
+  public Frustrum(Line line0, Line line1, Line line2, Line line3)
   {
     Vertex direction0 = line0.direction();
     Vertex direction1 = line1.direction();

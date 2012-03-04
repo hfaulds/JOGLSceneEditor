@@ -1,7 +1,7 @@
 package octree.nodes;
 
-import octree.collisions.Collidable;
 import renderers.core.GLRenderable;
+import collisions.Collidable;
 
 public interface LeafTarget extends Collidable, GLRenderable {
 

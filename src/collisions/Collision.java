@@ -1,8 +1,8 @@
-package octree.collisions;
+package collisions;
 
 
 
-public class CollisionDetails {
+public class Collision {
   private enum COLLISION {
     PARTIAL, FULL
   }
@@ -13,7 +13,7 @@ public class CollisionDetails {
   public final Collidable source;
   public final COLLISION type;
 
-  public CollisionDetails(Collidable source, COLLISION type) {
+  public Collision(Collidable source, COLLISION type) {
     this.source = source;
     this.type = type;
   }

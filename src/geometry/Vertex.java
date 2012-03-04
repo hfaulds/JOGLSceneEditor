@@ -5,12 +5,12 @@ import java.util.Vector;
 import javax.media.opengl.GL2;
 
 import material.Colour;
-import octree.collisions.CollisionDetails;
-import octree.collisions.CollisionFrustrum;
 import octree.nodes.LeafTarget;
 import octree.nodes.Placeable;
+import collisions.Collision;
+import collisions.CollisionHandler;
 
-public class Vertex implements LeafTarget {
+public class Vertex implements CollisionHandler, LeafTarget {
   public Colour colour = new Colour();
   public int renderSize = 5;
   
@@ -115,40 +115,40 @@ public class Vertex implements LeafTarget {
   }
   
   @Override
-  public Vector<CollisionDetails> collide(Line line, double accuracy) {
-    Vector<CollisionDetails> collisions = new Vector<CollisionDetails>();
+  public Vector<Collision> collide(Line line, double accuracy) {
+    Vector<Collision> collisions = new Vector<Collision>();
     
     if (line.distanceTo(this) < accuracy) {
-      collisions.add(new CollisionDetails(this, CollisionDetails.COLLISION_FULL));
+      collisions.add(new Collision(this, Collision.COLLISION_FULL));
     }
 
     return collisions;
   }
   
   @Override
-  public Vector<CollisionDetails> collide(CollisionFrustrum box, double accuracy) {
-    Vector<CollisionDetails> collisions = new Vector<CollisionDetails>();
+  public Vector<Collision> collide(Frustrum box, double accuracy) {
+    Vector<Collision> collisions = new Vector<Collision>();
     
     if(box.contains(this, accuracy))
     {
-      collisions.add(new CollisionDetails(this, CollisionDetails.COLLISION_FULL));
+      collisions.add(new Collision(this, Collision.COLLISION_FULL));
     }
     
     return collisions;
   }
 
   @Override
-  public Vector<CollisionDetails> collide(Placeable placeable, double accuracy) {
+  public Vector<Collision> collide(Placeable placeable, double accuracy) {
     // TODO Auto-generated method stub
     throw new RuntimeException("TODO");
   }
 
   @Override
-  public Vector<CollisionDetails> collide(Box space, double accuracy) {
-    Vector<CollisionDetails> collisions = new Vector<CollisionDetails>();
+  public Vector<Collision> collide(Box space, double accuracy) {
+    Vector<Collision> collisions = new Vector<Collision>();
     
     if(space.contains(this))
-      collisions.add(new CollisionDetails(this, CollisionDetails.COLLISION_FULL));
+      collisions.add(new Collision(this, Collision.COLLISION_FULL));
     
     return collisions;
   }
@@ -165,6 +165,11 @@ public class Vertex implements LeafTarget {
     gl.glEnd();
     
     gl.glPopMatrix();
+  }
+
+  @Override
+  public CollisionHandler getCollisionHandler() {
+    return this;
   }
 
   @Override
@@ -187,5 +192,4 @@ public class Vertex implements LeafTarget {
       return false;
     }
   }
-
 }
