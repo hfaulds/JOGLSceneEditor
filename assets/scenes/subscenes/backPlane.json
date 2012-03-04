@@ -1,0 +1,45 @@
+{
+	"nodeType" : "TransformNode"
+	"transform" :
+	{
+		"transformType" : "XRotation",
+		"transformValue" : 270
+	}
+	"subNodes" :
+	[
+		{
+			"nodeType" : "TransformNode",
+			"transform" :
+			{
+				"transformType" : "ZRotation",
+				"transformValue" : 270
+			}
+			"subNodes" :
+			[
+				{
+					"nodeType" : "TransformNode",
+					"transform" :
+					{
+						"transformType" : "Translation",
+						"transformValue" : [0,-10,10]
+					}
+					"subNodes" :
+					[
+						{
+							"nodeType" : "MeshNode",
+							"mesh" : 
+							{
+								"meshType" : "plane",
+								"width" : 20,
+								"depth" : 20,
+								"widthSegments" : 10,
+								"depthSegments" : 10
+							},
+							"texture" : "mushroom.jpg"
+						}
+					]
+				}
+			]
+		}
+	]
+}

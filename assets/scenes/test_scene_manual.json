@@ -1,0 +1,53 @@
+{
+    "sceneName" : "ForrestScene",
+	"sceneGraph" :
+	[
+		{
+			"nodeType" : "TransformNode"
+			"transform" :
+			{
+				"transformType" : "Translation",
+				"transformValue" : [0, 2, 0]
+			}
+			"subNodes" :
+			[
+				{
+					"nodeType" : "MeshNode"
+					"mesh" : 
+					{
+						"meshType" : "obj",
+						"filename" : "mushroom"
+					},
+					"texture" : "mushroom.jpg"
+				}
+			]
+		},
+		{	
+			"nodeType" : "MeshNode",
+			"mesh" : 
+			{
+				"meshType" : "plane",
+				"width" : 20,
+				"depth" : 20,
+				"widthSegments" : 10,
+				"depthSegments" : 10
+			},
+			"texture" : "mushroom.jpg"
+		},
+		{
+			"nodeType" : "SubScene",
+			"filename" : "backPlane.json"
+		},
+		{
+			"nodeType" : "DirectionalLightNode",
+			"light" :
+			{
+				"lightID" : 0,
+				"lightCutOffAngle" : 75,
+				"lightPosition" : [10, 5, 0],
+				"lightDirection" : [-1, 0, 0],
+				"lightColour" : [1, 1, 1, 1]
+			}
+		}
+	]
+}
